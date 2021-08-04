@@ -8,6 +8,7 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
         {
         }
 
+        public static EmployeeLevel None => new EmployeeLevel(id: 0, name: "Not defined");
         public static EmployeeLevel SoftwareEngineerL1 => new EmployeeLevel(id: 1, name: "Level 1 Software Engineer [Junior I]");
         public static EmployeeLevel SoftwareEngineerL2 => new EmployeeLevel(id: 2, name: "Level 2 Software Engineer [Junior II]");
         public static EmployeeLevel SoftwareEngineerL3 => new EmployeeLevel(id: 3, name: "Level 3 Software Engineer [Senior I]");
