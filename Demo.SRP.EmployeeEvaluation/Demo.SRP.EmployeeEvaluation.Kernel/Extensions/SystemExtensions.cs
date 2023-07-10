@@ -6,7 +6,7 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Extensions
     {
         public static void Display(this object value)
         {
-            Console.WriteLine(value: value);
+            Console.WriteLine(value);
         }
     }
 }

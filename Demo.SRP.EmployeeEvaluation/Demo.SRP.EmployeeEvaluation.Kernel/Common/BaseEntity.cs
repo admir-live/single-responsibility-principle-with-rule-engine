@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Demo.SRP.EmployeeEvaluation.Kernel
+namespace Demo.SRP.EmployeeEvaluation.Kernel.Common
 {
     public abstract class BaseEntity
     {

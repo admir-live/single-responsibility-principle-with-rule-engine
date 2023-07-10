@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Demo.SRP.EmployeeEvaluation.Kernel.Mutual
+namespace Demo.SRP.EmployeeEvaluation.Kernel.Common
 {
     public abstract class BaseEntity<TKey> : BaseEntity where TKey : IEquatable<TKey>
     {

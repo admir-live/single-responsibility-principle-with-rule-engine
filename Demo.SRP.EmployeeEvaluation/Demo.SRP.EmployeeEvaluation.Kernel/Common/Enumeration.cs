@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Demo.SRP.EmployeeEvaluation.Kernel.Mutual
+namespace Demo.SRP.EmployeeEvaluation.Kernel.Common
 {
     public abstract class Enumeration : IComparable
     {
@@ -18,7 +18,7 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Mutual
 
         public int CompareTo(object other)
         {
-            return Id.CompareTo(value: ((Enumeration) other).Id);
+            return Id.CompareTo(((Enumeration)other).Id);
         }
 
         public override string ToString()
@@ -28,11 +28,11 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Mutual
 
         public static IEnumerable<T> GetAll<T>() where T : Enumeration
         {
-            var fields = typeof(T).GetFields(bindingAttr: BindingFlags.Public |
-                                                          BindingFlags.Static |
-                                                          BindingFlags.DeclaredOnly);
+            var fields = typeof(T).GetFields(BindingFlags.Public |
+                                             BindingFlags.Static |
+                                             BindingFlags.DeclaredOnly);
 
-            return fields.Select(selector: f => f.GetValue(obj: null)).Cast<T>();
+            return fields.Select(f => f.GetValue(null)).Cast<T>();
         }
 
         public override bool Equals(object obj)
@@ -45,7 +45,7 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Mutual
             }
 
             var typeMatches = GetType() == obj.GetType();
-            var valueMatches = Id.Equals(obj: otherValue.Id);
+            var valueMatches = Id.Equals(otherValue.Id);
 
             return typeMatches && valueMatches;
         }
@@ -57,17 +57,17 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Mutual
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(value1: Name, value2: Id);
+            return HashCode.Combine(Name, Id);
         }
 
         public static bool operator ==(Enumeration left, Enumeration right)
         {
-            if (ReferenceEquals(objA: left, objB: right))
+            if (ReferenceEquals(left, right))
             {
                 return true;
             }
 
-            return left.Equals(other: right);
+            return left.Equals(right);
         }
 
         public static bool operator !=(Enumeration left, Enumeration right)

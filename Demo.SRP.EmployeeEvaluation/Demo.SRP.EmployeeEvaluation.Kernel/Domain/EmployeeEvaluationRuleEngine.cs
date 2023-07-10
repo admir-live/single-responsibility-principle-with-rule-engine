@@ -1,34 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Demo.SRP.EmployeeEvaluation.Kernel.Domain.Rules;
-using Demo.SRP.EmployeeEvaluation.Kernel.Mutual;
+using MoreLinq;
 
 namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
 {
     public static class EmployeeEvaluationRuleEngine
     {
-        private static IEnumerable<IRule<Employee, EmployeeLevel>> Rules { get; } = new IRule<Employee, EmployeeLevel>[]
-        {
-            new RuleForSoftwareEngineer1(),
-            new RuleForSoftwareEngineer2(),
-            new RuleForSoftwareEngineer3(),
-            new RuleForSoftwareEngineer4(),
-            new RuleForSoftwareEngineer5(),
-            new RuleForSoftwareEngineer6()
-        };
-
-        public static EmployeeLevel CalculateLevel(Employee employee)
-        {
-            var level = EmployeeLevel.None;
-            foreach (var rule in Rules)
+        private static IEnumerable<IEmployeeLevelEvaluationStrategy> Strategies { get; } =
+            new IEmployeeLevelEvaluationStrategy[]
             {
-                var candidate = rule.Evaluate(parameter: employee);
-                if (candidate.Id > level.Id)
-                {
-                    level = candidate;
-                }
-            }
+                new JuniorSoftwareEngineerLevelOneEvaluator(), new JuniorSoftwareEngineerLevelTwoEvaluator(),
+                new SeniorSoftwareEngineerLevelOneEvaluator(), new SoftwareEngineerTeamLeaderEvaluator(),
+                new SoftwareArchitectEvaluator()
+            };
 
-            return level;
+        public static EmployeeJobLevel CalculateLevel(Employee employee)
+        {
+            return Strategies
+                .Select(strategy => strategy.EvaluateEmployeeLevel(employee))
+                .DefaultIfEmpty(EmployeeJobLevel.Undefined)
+                .MaxBy(level => level.Id)
+                .FirstOrDefault();
         }
     }
 }

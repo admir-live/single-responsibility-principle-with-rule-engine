@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Demo.SRP.EmployeeEvaluation.Kernel.Mutual;
+﻿using Demo.SRP.EmployeeEvaluation.Kernel.Common;
 
 namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
 {
@@ -13,31 +10,24 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
             FirstName = firstName;
             LastName = lastName;
             YearsOfExperience = yearsOfExperience;
-            Skills = new List<EmployeeSkill>();
+            SkillManager = new SkillManager();
         }
 
         public string FirstName { get; }
         public string LastName { get; }
         public int YearsOfExperience { get; }
-        public IList<EmployeeSkill> Skills { get; }
+        public SkillManager SkillManager { get; }
 
-        public void AddSkills(params EmployeeSkill[] skills)
+        public bool MeetsExperienceAndSkillRequirements(int yearsOfExperience, params EmployeeSkill[] skills)
         {
-            foreach (var skill in skills)
-            {
-                if (Skills.Contains(item: skill) == false)
-                {
-                    Skills.Add(item: skill);
-                }
-            }
+            return YearsOfExperience >= yearsOfExperience && SkillManager.HasSkills(skills);
         }
 
         public override string ToString()
         {
-            var message = new StringBuilder(value: $"Hey! I am {FirstName} {LastName}. ");
-            message.Append(value: Skills.Any() ? $"I have a total of {YearsOfExperience} years experience with {string.Join(separator: ", ", values: Skills)}." : "I don't have any previous experience.");
-            message.AppendLine();
-            return message.ToString();
+            var skillsText = SkillManager.DisplaySkills();
+            return
+                $"Hey! I am {FirstName} {LastName}. I have a total of {YearsOfExperience} years experience. {skillsText}\n";
         }
     }
 }

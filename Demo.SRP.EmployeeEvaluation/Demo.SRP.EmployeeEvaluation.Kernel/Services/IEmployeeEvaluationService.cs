@@ -4,6 +4,6 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Services
 {
     public interface IEmployeeEvaluationService
     {
-        EmployeeLevel Evaluate(Employee employee);
+        EmployeeJobLevel Evaluate(Employee employee);
     }
 }

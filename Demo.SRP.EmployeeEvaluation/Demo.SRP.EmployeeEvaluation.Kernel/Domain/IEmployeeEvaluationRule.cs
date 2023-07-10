@@ -2,7 +2,7 @@
 
 namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
 {
-    public interface IEmployeeEvaluationRule : IRule<Employee, EmployeeLevel>
+    public interface IEmployeeEvaluationRule : IRule<Employee, EmployeeJobLevel>
     {
     }
 }

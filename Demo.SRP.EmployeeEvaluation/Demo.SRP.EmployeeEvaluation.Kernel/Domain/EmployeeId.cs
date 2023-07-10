@@ -1,58 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
 {
-    public sealed class EmployeeId : ValueObject<EmployeeId>, IEquatable<EmployeeId>
+    public sealed class EmployeeId : IEquatable<EmployeeId>
     {
         private EmployeeId(string id)
         {
             Id = id.Trim();
         }
 
-        public static EmployeeId NextId => new EmployeeId(id: Guid.NewGuid().ToString(format: "N"));
+        public static EmployeeId NextId => new(Guid.NewGuid().ToString("N"));
 
-        public string Id { get; set; }
-        protected override IEnumerable<object> EqualityCheckAttributes => new List<object> {Id};
+        public string Id { get; }
 
-        bool IEquatable<EmployeeId>.Equals(EmployeeId other)
+        public bool Equals(EmployeeId other)
         {
-            return Equals(other: other);
+            return other != null && Id == other.Id;
         }
 
         public static EmployeeId Parse(string id)
         {
-            if (string.IsNullOrWhiteSpace(value: id))
+            if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentNullException(paramName: nameof(id));
+                throw new ArgumentException("The ID cannot be null or consist only of whitespace.", nameof(id));
             }
 
-            return new EmployeeId(id: id);
-        }
-
-        private bool Equals(EmployeeId other)
-        {
-            return base.Equals(obj: other) && Id == other.Id;
+            return new EmployeeId(id);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(objA: null, objB: obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(objA: this, objB: obj))
+            if (ReferenceEquals(obj, this))
             {
                 return true;
             }
 
-            return obj.GetType() == GetType() && Equals(other: (EmployeeId) obj);
+            return obj is EmployeeId other && Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(value1: base.GetHashCode(), value2: Id);
+            return HashCode.Combine(Id);
         }
 
         public override string ToString()
@@ -62,17 +50,23 @@ namespace Demo.SRP.EmployeeEvaluation.Kernel.Domain
 
         public static implicit operator string(EmployeeId id)
         {
-            return id.ToString();
+            return id?.ToString();
         }
 
         public static implicit operator EmployeeId(string id)
         {
-            return Parse(id: id.Trim());
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException("Cannot implicitly convert null or white-space string to EmployeeId.",
+                    nameof(id));
+            }
+
+            return Parse(id.Trim());
         }
 
         public static bool operator ==(EmployeeId left, EmployeeId right)
         {
-            return right is { } && left is { } && left.Id == right.Id;
+            return Equals(left, right);
         }
 
         public static bool operator !=(EmployeeId left, EmployeeId right)
